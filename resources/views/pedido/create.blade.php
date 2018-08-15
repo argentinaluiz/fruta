@@ -41,7 +41,7 @@
                                 <td>
                                     <select class="form-control" :name="'items['+key+'][item]'">
                                         @foreach($items as $item)
-                                            <option value="{{$item->id}}">{{$item->item}}</option>
+                                            <option value="{{$item->id}}">{{$item->item->item}} - {{$item->volume}} - R$ {{$item->valor}}</option>
                                         @endforeach
                                     </select>
                                 </td>

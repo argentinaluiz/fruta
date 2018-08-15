@@ -13,6 +13,6 @@ class PedidoItem extends Model
     public $timestamps = false;
 
     public function item(){
-        return $this->belongsTo(Item::class,'iditem');
+        return $this->belongsTo(ItemValor::class,'iditem');
     }
 }

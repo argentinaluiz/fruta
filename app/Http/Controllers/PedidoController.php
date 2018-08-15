@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Cliente;
 use App\Item;
+use App\ItemValor;
 use App\Pedido;
 use Illuminate\Http\Request;
 
@@ -35,7 +36,7 @@ class PedidoController extends Controller
     public function create()
     {
         $clientes = Cliente::all();
-        $items = Item::all();
+        $items = ItemValor::with('item')->get();
         return view('pedido.create', [
             'clientes' => $clientes,
             'items' => $items
@@ -92,7 +93,7 @@ class PedidoController extends Controller
     public function edit(Pedido $pedido)
     {
         $clientes = Cliente::all();
-        $items = Item::all();
+        $items = ItemValor::with('item')->get();
         $itemsDoPedido = [];
         foreach ($pedido->items as $item){
             $itemsDoPedido[] = [

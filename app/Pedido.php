@@ -27,7 +27,7 @@ class Pedido extends Model
     public function getItemsNomeAttribute(){
         $itemsNome = [];
         foreach ($this->items as $item){
-            $itemsNome[] = $item->item->item;
+            $itemsNome[] = "{$item->item->item->item} - {$item->item->volume}";
         }
         return implode(',',$itemsNome);
     }
