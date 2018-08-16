@@ -18,11 +18,13 @@
                     </div>
                     <div class="form-group">
                         <label for="data_pedido">Data Pedido</label>
-                        <input class="form-control" type="date" disabled value="{{$pedido->dataPedido->format('Y-m-d')}}">
+                        <input class="form-control" type="date" name="dataPedido" id="data_pedido"
+                               value="{{$pedido->dataPedido ? $pedido->dataPedido->format('Y-m-d'):''}}">
                     </div>
                     <div class="form-group">
                         <label for="data_entrega">Data Entrega</label>
-                        <input class="form-control" type="date" name="dataEntrega" id="data_entrega" value="{{$pedido->dataEntrega ? $pedido->dataEntrega->format('Y-m-d'): ''}}">
+                        <input class="form-control" type="date" name="dataEntrega" id="data_entrega"
+                               value="{{$pedido->dataEntrega ? $pedido->dataEntrega->format('Y-m-d'): ''}}">
                     </div>
                     <div class="form-group">
                         <button type="button" class="btn btn-primary" @click="adicionarItem()">Nova linha</button>
@@ -42,12 +44,14 @@
                                 <td>
                                     <select class="form-control" :name="'items['+key+'][item]'" :value="item.item">
                                         @foreach($items as $item)
-                                            <option value="{{$item->id}}">{{$item->item->item}} - {{$item->volume}} - R$ {{$item->valor}}</option>
+                                            <option value="{{$item->id}}">{{$item->item->item}} - {{$item->volume}} -
+                                                R$ {{$item->valor}}</option>
                                         @endforeach
                                     </select>
                                 </td>
                                 <td>
-                                    <input class="form-control" type="number" :name="'items['+key+'][quantidade]'" step="1" min="1" :value="item.quantidade"/>
+                                    <input class="form-control" type="number" :name="'items['+key+'][quantidade]'"
+                                           step="1" min="1" :value="item.quantidade"/>
                                 </td>
                             </tr>
                             </tbody>
@@ -70,11 +74,11 @@
                 items: {!! json_encode($itemsDoPedido) !!}
             },
             methods: {
-                adicionarItem: function(){
+                adicionarItem: function () {
                     this.items.push([]);
                 },
-                removerLinha: function(index){
-                    this.items.splice(index,1);
+                removerLinha: function (index) {
+                    this.items.splice(index, 1);
                 }
             }
         })

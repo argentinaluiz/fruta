@@ -6,15 +6,13 @@ use Illuminate\Database\Eloquent\Model;
 
 class Pedido extends Model
 {
-    const CREATED_AT = 'dataPedido';
-
-    const UPDATED_AT = null;
-
     protected $table = 'pedido';
 
-    protected $fillable = ['dataEntrega','dataPedido','idpessoa'];
+    protected $fillable = ['dataEntrega','dataPedido','dataPedido','idpessoa'];
 
     protected $dates = ['dataPedido', 'dataEntrega'];
+
+    public $timestamps = false;
 
     public function cliente(){
         return $this->belongsTo(Cliente::class,'idpessoa');

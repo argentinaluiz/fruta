@@ -36,7 +36,7 @@
                     <tr>
                         <td>{{ $pedido->id }}</td>
                         <td>{{$pedido->items_nome }}</td>
-                        <td>{{$pedido->dataPedido->format('d/m/Y')}}</td>
+                        <td>{{$pedido->dataPedido ? $pedido->dataPedido->format('d/m/Y'): ''}}</td>
                         <td>{{$pedido->dataEntrega ? $pedido->dataEntrega->format('d/m/Y'): ''}}</td>
                         <td>{{$pedido->cliente->nome}}</td>
                         <td>

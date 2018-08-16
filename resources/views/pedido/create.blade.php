@@ -17,7 +17,7 @@
                     </div>
                     <div class="form-group">
                         <label for="data_pedido">Data Pedido</label>
-                        <input class="form-control" type="date" disabled>
+                        <input class="form-control" type="date" name="dataPedido" id="data_pedido">
                     </div>
                     <div class="form-group">
                         <label for="data_entrega">Data Entrega</label>

@@ -52,6 +52,7 @@ class PedidoController extends Controller
     public function store(Request $request)
     {
         $this->validate($request, [
+            'dataPedido' => 'nullable|date',
             'dataEntrega' => 'nullable|date',
             'cliente' => 'required|exists:pessoa,id',
             'items' => 'required|array',
@@ -61,6 +62,7 @@ class PedidoController extends Controller
 
         /** @var Pedido $pedido */
         $pedido = Pedido::create([
+            'dataPedido' => $request->dataPedido,
             'dataEntrega' => $request->dataEntrega,
             'idpessoa' => $request->cliente
         ]);
@@ -119,6 +121,7 @@ class PedidoController extends Controller
     public function update(Request $request, Pedido $pedido)
     {
         $this->validate($request, [
+            'dataPedido' => 'nullable|date',
             'dataEntrega' => 'nullable|date',
             'cliente' => 'required|exists:pessoa,id',
             'items' => 'required|array',
@@ -128,6 +131,7 @@ class PedidoController extends Controller
 
         /** @var Pedido $pedido */
         $pedido->fill([
+            'dataPedido' => $request->dataPedido,
             'dataEntrega' => $request->dataEntrega,
             'idpessoa' => $request->cliente
         ]);
