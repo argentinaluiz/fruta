@@ -56,7 +56,7 @@ class PedidoController extends Controller
             'dataEntrega' => 'nullable|date',
             'cliente' => 'required|exists:pessoa,id',
             'items' => 'required|array',
-            'items.*.item' => 'required|exists:item,id',
+            'items.*.item' => 'required|exists:item_valor_tamanho,id',
             'items.*.quantidade' => 'required|integer|min:1',
         ]);
 
@@ -125,7 +125,7 @@ class PedidoController extends Controller
             'dataEntrega' => 'nullable|date',
             'cliente' => 'required|exists:pessoa,id',
             'items' => 'required|array',
-            'items.*.item' => 'required|exists:item,id',
+            'items.*.item' => 'required|exists:item_valor_tamanho,id',
             'items.*.quantidade' => 'required|integer|min:1',
         ]);
 
