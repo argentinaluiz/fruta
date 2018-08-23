@@ -25,8 +25,8 @@ class Pedido extends Model
     public function getItemsNomeAttribute(){
         $itemsNome = [];
         foreach ($this->items as $item){
-            $itemsNome[] = "{$item->item->item->item} - {$item->item->volume}";
+            $itemsNome[] = "{$item->item->item->item} {$item->item->volume} - {$item->quantidade}";
         }
-        return implode(',',$itemsNome);
+        return implode('<br>',$itemsNome);
     }
 }

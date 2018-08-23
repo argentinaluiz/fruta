@@ -21,3 +21,5 @@ Route::get('/home', 'HomeController@index')->name('home');
 
 
 Route::resource('pedidos','PedidoController');
+Route::resource('clientes','ClienteController');
+Route::get('get-cidades/{idEstado}', 'CidadeController@getCidades');

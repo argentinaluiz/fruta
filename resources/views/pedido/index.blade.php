@@ -8,6 +8,20 @@
                 <thead>
                 <tr>
                     <td>
+                        <strong>Total:</strong> R$ {{$total ?? 0}}
+                    </td>
+                    <td>
+                        <strong>Hoje:</strong> R$ {{$totalToday ?? 0}}
+                    </td>
+                    <td>
+                        <strong>Últimos 7 dias:</strong> R$ {{$totalSevenDays ?? 0 }}
+                    </td>
+                    <td>
+                        <strong>Últimos 30 dias:</strong> R$ {{$totalThirtyDays ?? 0}}
+                    </td>
+                </tr>
+                <tr>
+                    <td>
                         <a href="{{route('pedidos.create')}}" class="btn btn-primary" >Novo pedido</a>
                     </td>
                     <td colspan="4">
@@ -35,7 +49,7 @@
                 @foreach($pedidos as $pedido)
                     <tr>
                         <td>{{ $pedido->id }}</td>
-                        <td>{{$pedido->items_nome }}</td>
+                        <td>{!! $pedido->items_nome !!}</td>
                         <td>{{$pedido->dataPedido ? $pedido->dataPedido->format('d/m/Y'): ''}}</td>
                         <td>{{$pedido->dataEntrega ? $pedido->dataEntrega->format('d/m/Y'): ''}}</td>
                         <td>{{$pedido->cliente->nome}}</td>

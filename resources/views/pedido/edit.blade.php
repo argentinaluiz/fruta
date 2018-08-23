@@ -5,7 +5,7 @@
         <div class="row">
             <h4>Editar pedido #{{$pedido->id}}</h4>
             <div class="col-md-12">
-                <form action="{{route('pedidos.update', ['pedido' => $pedido->id])}}" method="post">
+                <form id="my-form" action="{{route('pedidos.update', ['pedido' => $pedido->id])}}" method="post" @submit.prevent="onsubmit">
                     {{csrf_field()}}
                     {{method_field('PUT')}}
                     <div class="form-group">
@@ -42,12 +42,8 @@
                                     <button type="button" @click="removerLinha(key)">Remover</button>
                                 </td>
                                 <td>
-                                    <select class="form-control" :name="'items['+key+'][item]'" :value="item.item">
-                                        @foreach($items as $item)
-                                            <option value="{{$item->id}}">{{$item->item->item}} - {{$item->volume}} -
-                                                R$ {{$item->valor}}</option>
-                                        @endforeach
-                                    </select>
+                                    <v-select v-model="items[key].selected" :options='{!! json_encode($items) !!}'></v-select>
+                                    <input type="hidden" :name="'items['+key+'][item]'">
                                 </td>
                                 <td>
                                     <input class="form-control" type="number" :name="'items['+key+'][quantidade]'"
@@ -66,7 +62,10 @@
 
 @push('javascript')
     <script src="https://cdnjs.cloudflare.com/ajax/libs/vue/2.5.17/vue.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/vue-select/2.4.0/vue-select.js"></script>
     <script>
+        Vue.component('v-select', VueSelect.VueSelect);
         Vue.config.delimiters = ['[[', ']]'];
         var app = new Vue({
             el: '#container-pedido',
@@ -79,6 +78,12 @@
                 },
                 removerLinha: function (index) {
                     this.items.splice(index, 1);
+                },
+                onsubmit(){
+                    for(var key in this.items){
+                        $('[name="items['+key+'][item]"]').val(this.items[key].selected.value.id);
+                    }
+                    $('#my-form')[0].submit();
                 }
             }
         })

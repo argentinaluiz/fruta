@@ -3,7 +3,6 @@
 namespace App\Http\Controllers;
 
 use App\Cliente;
-use App\Item;
 use App\ItemValor;
 use App\Pedido;
 use Illuminate\Http\Request;
@@ -18,15 +17,50 @@ class PedidoController extends Controller
     public function index(Request $request)
     {
         $pedidoQuery = Pedido::query();
-        if($request->get('data_inicio')){
+        if ($request->get('data_inicio')) {
             $pedidoQuery->whereDate('dataPedido', '>=', $request->data_inicio);
         }
-        if($request->get('data_fim')){
+        if ($request->get('data_fim')) {
             $pedidoQuery->whereDate('dataPedido', '<=', $request->data_fim);
         }
-        $pedidos = $pedidoQuery->paginate();
-        return view('pedido.index', ['pedidos' => $pedidos]);
+        $pedidoClonedQuery = clone $pedidoQuery;
+        $pedidoClonedQuery->selectRaw('sum(item_pedido.quantidade*item_valor_tamanho.valor) as total')
+            ->join('item_pedido', 'pedido.id', '=', 'item_pedido.idpedido')
+            ->join('item_valor_tamanho', 'item_valor_tamanho.id', '=', 'item_pedido.iditem');
+        $total = $pedidoClonedQuery->first()->total;
+
+        $totalToday = Pedido::selectRaw('sum(item_pedido.quantidade*item_valor_tamanho.valor) as total')
+            ->join('item_pedido', 'pedido.id', '=', 'item_pedido.idpedido')
+            ->join('item_valor_tamanho', 'item_valor_tamanho.id', '=', 'item_pedido.iditem')
+            ->whereBetween('dataPedido', [
+                (new \Carbon\Carbon())->format('Y-m-d'),
+                (new \DateTime())->format('Y-m-d')
+            ])
+            ->first()->total;
+
+        $totalSevenDays = Pedido::selectRaw('sum(item_pedido.quantidade*item_valor_tamanho.valor) as total')
+            ->join('item_pedido', 'pedido.id', '=', 'item_pedido.idpedido')
+            ->join('item_valor_tamanho', 'item_valor_tamanho.id', '=', 'item_pedido.iditem')
+            ->whereBetween('dataPedido', [
+                (new \Carbon\Carbon())->subDays(7)->format('Y-m-d'),
+                (new \DateTime())->format('Y-m-d')
+            ])
+            ->first()->total;
+
+        $totalThirtyDays = Pedido::selectRaw('sum(item_pedido.quantidade*item_valor_tamanho.valor) as total')
+            ->join('item_pedido', 'pedido.id', '=', 'item_pedido.idpedido')
+            ->join('item_valor_tamanho', 'item_valor_tamanho.id', '=', 'item_pedido.iditem')
+            ->whereBetween('dataPedido', [
+                (new \Carbon\Carbon())->subDays(30)->format('Y-m-d'),
+                (new \DateTime())->format('Y-m-d')
+            ])
+            ->first()->total;
+        $pedidos = $pedidoQuery->orderBy('id','desc')->paginate();
+        return view('pedido.index', compact(
+            'pedidos', 'total', 'totalSevenDays', 'totalThirtyDays', 'totalToday'
+        ));
     }
+
 
     /**
      * Show the form for creating a new resource.
@@ -36,7 +70,9 @@ class PedidoController extends Controller
     public function create()
     {
         $clientes = Cliente::all();
-        $items = ItemValor::with('item')->get();
+        $items = ItemValor::with('item')->get()->map(function ($item) {
+            return ['label' => "{$item->item->item} - {$item->volume} - R$ {$item->valor}", 'value' => $item];
+        });
         return view('pedido.create', [
             'clientes' => $clientes,
             'items' => $items
@@ -95,15 +131,20 @@ class PedidoController extends Controller
     public function edit(Pedido $pedido)
     {
         $clientes = Cliente::all();
-        $items = ItemValor::with('item')->get();
+        $items = ItemValor::with('item')->get()->map(function ($item) {
+            return ['label' => "{$item->item->item} - {$item->volume} - R$ {$item->valor}", 'value' => $item];
+        });
         $itemsDoPedido = [];
-        foreach ($pedido->items as $item){
+        foreach ($pedido->items as $item) {
             $itemsDoPedido[] = [
-                'item' => $item->item->id,
+                'selected' => [
+                    'label' => "{$item->item->item->item} - {$item->item->volume} - R$ {$item->item->valor}", 'value' => $item->item
+                ],
                 'quantidade' => $item->quantidade
             ];
         }
-        return view('pedido.edit',[
+
+        return view('pedido.edit', [
             'pedido' => $pedido,
             'clientes' => $clientes,
             'items' => $items,

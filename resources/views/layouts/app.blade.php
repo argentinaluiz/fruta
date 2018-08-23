@@ -19,6 +19,7 @@
 
     <!-- Styles -->
     <link href="{{ asset('css/app.css') }}" rel="stylesheet">
+    @stack('stylesheet')
 </head>
 <body>
     <div id="app">
@@ -36,6 +37,9 @@
                     <ul class="navbar-nav mr-auto">
                         <li class="nav-item">
                             <a class="nav-link" href="{{ route('pedidos.index') }}">Pedido</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="{{ route('clientes.index') }}">Cliente</a>
                         </li>
                     </ul>
 
