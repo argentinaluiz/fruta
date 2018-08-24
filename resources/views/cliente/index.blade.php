@@ -16,6 +16,7 @@
                     <th>Nome</th>
                     <th>Perfil</th>
                     <th>Endereco</th>
+                    <th>Bairro</th>
                     <th>Telefone</th>
                     <th>Email</th>
                     <th>Ações</th>
@@ -28,6 +29,7 @@
                         <td>{{$cliente->nome}}</td>
                         <td>{{ $cliente->perfilModel->nome }}</td>
                         <td>{{$cliente->endereco }}</td>
+                        <td>{{$cliente->bairro}}</td>
                         <td>{{$cliente->telefone }}</td>
                         <td>{{$cliente->email }}</td>
                         <td>

@@ -30,6 +30,10 @@
                         <textarea name="endereco" class="form-control" id="endereco" cols="30" rows="2">{{$cliente->endereco}}</textarea>
                     </div>
                     <div class="form-group">
+                        <label for="bairro" class="form-l">Bairro</label>
+                        <textarea name="bairro" class="form-control" id="bairro" cols="30" rows="2" required>{{$cliente->bairro}}</textarea>
+                    </div>
+                    <div class="form-group">
                         <label for="estado" class="form-l">Estado</label>
                         <select class="form-control" class="form-control" name="id_estado" id="estado" value="{{$cliente->cidade?$cliente->cidade->estado->id:''}}">
                             <option value="">Selecione o estado</option>
