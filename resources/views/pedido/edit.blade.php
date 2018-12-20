@@ -17,6 +17,15 @@
                         </select>
                     </div>
                     <div class="form-group">
+                        <label for="perfil" class="form-l">Origem</label>
+                        <select class="form-control" name="perfil" id="perfil" required value="{{$pedido->idorigem}}">
+                            <option value="">Selecione o perfil</option>
+                            @foreach($perfis as $perfil)
+                                <option value="{{$perfil->id}}" {{$perfil->id==$pedido->idorigem?'selected="selected"': ''}}>{{$perfil->nome}}</option>
+                            @endforeach
+                        </select>
+                    </div>
+                    <div class="form-group">
                         <label for="data_pedido">Data Pedido</label>
                         <input class="form-control" type="date" name="dataPedido" id="data_pedido"
                                value="{{$pedido->dataPedido ? $pedido->dataPedido->format('Y-m-d'):''}}">

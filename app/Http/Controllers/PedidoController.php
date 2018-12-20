@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Cliente;
 use App\ItemValor;
 use App\Pedido;
+use App\Perfil;
 use Illuminate\Http\Request;
 
 class PedidoController extends Controller
@@ -70,11 +71,13 @@ class PedidoController extends Controller
     public function create()
     {
         $clientes = Cliente::all();
+        $perfis = Perfil::all();
         $items = ItemValor::with('item')->get()->map(function ($item) {
             return ['label' => "{$item->item->item} - {$item->volume} - R$ {$item->valor}", 'value' => $item];
         });
         return view('pedido.create', [
             'clientes' => $clientes,
+            'perfis' => $perfis,
             'items' => $items
         ]);
     }
@@ -91,6 +94,7 @@ class PedidoController extends Controller
             'dataPedido' => 'nullable|date',
             'dataEntrega' => 'nullable|date',
             'cliente' => 'required|exists:pessoa,id',
+            'perfil' => 'required|exists:perfil,id',
             'items' => 'required|array',
             'items.*.item' => 'required|exists:item_valor_tamanho,id',
             'items.*.quantidade' => 'required|integer|min:1',
@@ -100,7 +104,8 @@ class PedidoController extends Controller
         $pedido = Pedido::create([
             'dataPedido' => $request->dataPedido,
             'dataEntrega' => $request->dataEntrega,
-            'idpessoa' => $request->cliente
+            'idpessoa' => $request->cliente,
+            'idorigem' => $request->perfil
         ]);
         foreach ($request->items as $item) {
             $pedido->items()->create([
@@ -131,6 +136,7 @@ class PedidoController extends Controller
     public function edit(Pedido $pedido)
     {
         $clientes = Cliente::all();
+        $perfis = Perfil::all();
         $items = ItemValor::with('item')->get()->map(function ($item) {
             return ['label' => "{$item->item->item} - {$item->volume} - R$ {$item->valor}", 'value' => $item];
         });
@@ -147,6 +153,7 @@ class PedidoController extends Controller
         return view('pedido.edit', [
             'pedido' => $pedido,
             'clientes' => $clientes,
+            'perfis' => $perfis,
             'items' => $items,
             'itemsDoPedido' => $itemsDoPedido
         ]);
@@ -165,6 +172,7 @@ class PedidoController extends Controller
             'dataPedido' => 'nullable|date',
             'dataEntrega' => 'nullable|date',
             'cliente' => 'required|exists:pessoa,id',
+            'perfil' => 'required|exists:perfil,id',
             'items' => 'required|array',
             'items.*.item' => 'required|exists:item_valor_tamanho,id',
             'items.*.quantidade' => 'required|integer|min:1',
@@ -174,7 +182,8 @@ class PedidoController extends Controller
         $pedido->fill([
             'dataPedido' => $request->dataPedido,
             'dataEntrega' => $request->dataEntrega,
-            'idpessoa' => $request->cliente
+            'idpessoa' => $request->cliente,
+            'idorigem' => $request->perfil
         ]);
         $pedido->save();
         $pedido->items()->delete();

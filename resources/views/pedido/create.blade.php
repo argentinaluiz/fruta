@@ -16,6 +16,15 @@
                         </select>
                     </div>
                     <div class="form-group">
+                        <label for="perfil" class="form-l">Origem</label>
+                        <select class="form-control" name="perfil" id="perfil" required>
+                            <option value="">Selecione o perfil</option>
+                            @foreach($perfis as $perfil)
+                                <option value="{{$perfil->id}}">{{$perfil->nome}}</option>
+                            @endforeach
+                        </select>
+                    </div>
+                    <div class="form-group">
                         <label for="data_pedido">Data Pedido</label>
                         <input class="form-control" type="date" name="dataPedido" id="data_pedido">
                     </div>

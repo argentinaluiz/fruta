@@ -42,6 +42,7 @@
                     <th>Criado em</th>
                     <th>Entrega</th>
                     <th>Cliente</th>
+                    <th>Origem</th>
                     <th>Ações</th>
                 </tr>
                 </thead>
@@ -53,6 +54,7 @@
                         <td>{{$pedido->dataPedido ? $pedido->dataPedido->format('d/m/Y'): ''}}</td>
                         <td>{{$pedido->dataEntrega ? $pedido->dataEntrega->format('d/m/Y'): ''}}</td>
                         <td>{{$pedido->cliente->nome}}</td>
+                        <td>{{$pedido->perfil ? $pedido->perfil->nome: ''}}</td>
                         <td>
                             <a href="{{route('pedidos.edit',['pedido' => $pedido])}}">Editar</a> |
                         </td>

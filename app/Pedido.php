@@ -8,7 +8,7 @@ class Pedido extends Model
 {
     protected $table = 'pedido';
 
-    protected $fillable = ['dataEntrega','dataPedido','dataPedido','idpessoa'];
+    protected $fillable = ['dataEntrega','dataPedido','dataPedido','idpessoa', 'idorigem'];
 
     protected $dates = ['dataPedido', 'dataEntrega'];
 
@@ -16,6 +16,10 @@ class Pedido extends Model
 
     public function cliente(){
         return $this->belongsTo(Cliente::class,'idpessoa');
+    }
+
+    public function perfil(){
+        return $this->belongsTo(Perfil::class, 'idorigem');
     }
 
     public function items(){
