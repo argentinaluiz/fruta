@@ -6,6 +6,8 @@ use App\Cliente;
 use App\ItemValor;
 use App\Pedido;
 use App\Perfil;
+use App\Troca;
+use Carbon\Carbon;
 use Illuminate\Http\Request;
 
 class PedidoController extends Controller
@@ -17,70 +19,100 @@ class PedidoController extends Controller
      */
     public function index(Request $request)
     {
-        $pedidoQuery = Pedido::query();
-
-        $this->addClient($pedidoQuery, $request);
+        $pedidoQuery = $this->addClient(Pedido::query(), $request);
 
         if ($request->get('data_inicio')) {
-            $pedidoQuery->whereDate('dataPedido', '>=', $request->data_inicio);
+            $pedidoQuery->greaterThanDataPedido($request->data_inicio);
         }
         if ($request->get('data_fim')) {
-            $pedidoQuery->whereDate('dataPedido', '<=', $request->data_fim);
+            $pedidoQuery->lessThanDataPedido($request->data_fim);
         }
+
         $pedidoTotalQuery = clone $pedidoQuery;
         $pedidoTotalEntregaQuery = clone $pedidoQuery;
+        $pedidos = $pedidoQuery->orderBy('pedido.id', 'desc')->paginate();
+        $totalTrocas = $this->addClient(Troca::query(), $request)->count();
 
-        $pedidos = $pedidoQuery->orderBy('id', 'desc')->paginate();
-        $total = $this->makeQuery($pedidoTotalQuery)->first()->total;
+        $total = $pedidoTotalQuery->withTotal()->first()->total_pedido;
         $total = $total ?? 0;
-        $totalTaxaEntrega = $pedidoTotalEntregaQuery
-            ->selectRaw('sum(taxa_entrega) as total')
-            ->first()->total;
+        $totalTaxaEntrega = $pedidoTotalEntregaQuery->withTotalTaxaEntrega()->first()->total_taxa_entrega;
         $totalTaxaEntrega = $totalTaxaEntrega ?? 0;
 
-        $totalToday = $this->makeQuery($this->addClient(Pedido::query(), $request))
-            ->whereBetween('dataPedido', [
-                (new \Carbon\Carbon())->format('Y-m-d'),
-                (new \DateTime())->format('Y-m-d')
-            ])
-            ->first()->total;
-        $totalToday = $totalToday ?? 0;
+        $totalToday = $this->findTotalBetween([
+            (new Carbon())->format('Y-m-d'),
+            (new \DateTime())->format('Y-m-d')
+        ], $request);
 
-        $totalSevenDays = $this->makeQuery($this->addClient(Pedido::query(), $request))
-            ->whereBetween('dataPedido', [
-                (new \Carbon\Carbon())->subDays(7)->format('Y-m-d'),
-                (new \DateTime())->format('Y-m-d')
-            ])
-            ->first()->total;
-        $totalSevenDays = $totalSevenDays ?? 0;
+        $totalEntregaToday = $this->findTotalEntregaBetween([
+            (new Carbon())->format('Y-m-d'),
+            (new \DateTime())->format('Y-m-d')
+        ], $request);
 
-        $totalThirtyDays = $this->makeQuery($this->addClient(Pedido::query(), $request))
-            ->whereBetween('dataPedido', [
-                (new \Carbon\Carbon())->subDays(30)->format('Y-m-d'),
-                (new \DateTime())->format('Y-m-d')
-            ])
-            ->first()->total;
-        $totalThirtyDays = $totalThirtyDays ?? 0;
+        $totalSevenDays = $this->findTotalBetween([
+            (new Carbon())->subDays(7)->format('Y-m-d'),
+            (new \DateTime())->format('Y-m-d')
+        ], $request);
+
+        $totalEntregaSevenDays = $this->findTotalEntregaBetween([
+            (new Carbon())->subDays(7)->format('Y-m-d'),
+            (new \DateTime())->format('Y-m-d')
+        ], $request);
+
+        $totalThirtyDays = $this->findTotalBetween([
+            (new Carbon())->subDays(30)->format('Y-m-d'),
+            (new \DateTime())->format('Y-m-d')
+        ], $request);
+
+        $totalEntregaThirtyDays = $this->findTotalEntregaBetween([
+            (new Carbon())->subDays(30)->format('Y-m-d'),
+            (new \DateTime())->format('Y-m-d')
+        ], $request);
 
         $clientes = Cliente::all();
 
         return view('pedido.index', compact(
-            'pedidos', 'clientes', 'total','totalTaxaEntrega', 'totalSevenDays', 'totalThirtyDays', 'totalToday'
+            'pedidos',
+            'clientes',
+            'total',
+            'totalTaxaEntrega',
+            'totalToday',
+            'totalEntregaToday',
+            'totalSevenDays',
+            'totalEntregaSevenDays',
+            'totalThirtyDays',
+            'totalEntregaThirtyDays',
+            'totalTrocas'
         ));
     }
 
-    protected function makeQuery($query)
+    protected function findTotalBetween($interval, $request)
     {
-        return $query
-            ->selectRaw('sum(item_pedido.quantidade*item_valor_tamanho.valor) as total')
-            ->join('item_pedido', 'pedido.id', '=', 'item_pedido.idpedido')
-            ->join('item_valor_tamanho', 'item_valor_tamanho.id', '=', 'item_pedido.iditem');
+        $total = $this->addClient(Pedido::query(), $request)
+            ->withTotal()
+            ->beetweenDataPedido([
+                $interval[0],
+                $interval[1]
+            ])
+            ->first()->total_pedido;
+        return $total ?? 0;
+    }
+
+    protected function findTotalEntregaBetween($interval, $request)
+    {
+        $total = $this->addClient(Pedido::query(), $request)
+            ->withTotalTaxaEntrega()
+            ->beetweenDataPedido([
+                $interval[0],
+                $interval[1]
+            ])
+            ->first()->total_taxa_entrega;
+        return $total ?? 0;
     }
 
     protected function addClient($query, Request $request)
     {
         $cliente = $request->get('cliente');
-        return $cliente && $cliente !== "" ? $query->where('idpessoa', $cliente) : $query;
+        return $cliente && $cliente !== "" ? $query->byCliente($cliente) : $query;
     }
 
 

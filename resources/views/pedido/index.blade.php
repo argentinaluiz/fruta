@@ -7,19 +7,22 @@
             <table class="table">
                 <tr>
                     <td>
-                        <strong>Quant.:</strong> {{$pedidos->total()}}
+                        <strong>Ped.:</strong> {{$pedidos->total()}}
+                    </td>
+                    <td>
+                        <strong>Troca:</strong> {{$totalTrocas}}
                     </td>
                     <td>
                         <strong>Total:</strong> R$ {{$total + $totalTaxaEntrega}} ({{$totalTaxaEntrega}})
                     </td>
                     <td>
-                        <strong>Hoje:</strong> R$ {{$totalToday}}
+                        <strong>Hoje:</strong> R$ {{$totalToday + $totalEntregaToday}} ({{$totalEntregaToday}})
                     </td>
                     <td>
-                        <strong>Últimos 7 dias:</strong> R$ {{$totalSevenDays}}
+                        <strong>Últimos 7 dias:</strong> R$ {{$totalSevenDays + $totalEntregaSevenDays}} ({{$totalEntregaSevenDays}})
                     </td>
                     <td>
-                        <strong>Últimos 30 dias:</strong> R$ {{$totalThirtyDays}}
+                        <strong>Últimos 30 dias:</strong> R$ {{$totalThirtyDays + $totalEntregaThirtyDays}} ({{$totalEntregaThirtyDays}})
                     </td>
                 </tr>
             </table>
@@ -59,7 +62,7 @@
                 </tr>
                 <tr>
                     <th>#</th>
-                    <th>Items</th>
+                    <th>Total</th>
                     <th>Criado em</th>
                     <th>Entrega</th>
                     <th>Cliente</th>
@@ -71,7 +74,7 @@
                 @foreach($pedidos as $pedido)
                     <tr>
                         <td>{{ $pedido->id }}</td>
-                        <td>{!! $pedido->items_nome !!}</td>
+                        <td>R$ {{ $pedido->total }}</td>
                         <td>{{$pedido->dataPedido ? $pedido->dataPedido->format('d/m/Y'): ''}}</td>
                         <td>{{$pedido->dataEntrega ? $pedido->dataEntrega->format('d/m/Y'): ''}}</td>
                         <td>{{$pedido->cliente->nome}}</td>

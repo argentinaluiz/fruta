@@ -31,4 +31,8 @@ class Cliente extends Model
     public function pedidos(){
         return $this->hasMany(Pedido::class,'idpessoa');
     }
+
+    public function trocas(){
+        return $this->hasMany(Troca::class, 'idpessoa');
+    }
 }

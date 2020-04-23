@@ -45,4 +45,41 @@ class Pedido extends Model
         }
         return implode('<br>',$itemsNome);
     }
+
+    public function getTotalAttribute(){
+        $sum = 0;
+        foreach ($this->items as $item){
+            $sum += $item->item->valor * $item->quantidade;
+        }
+        return number_format($sum, 2);
+    }
+
+    public function scopeWithTotal($query){
+        return $query->selectRaw('sum(item_pedido.quantidade*item_valor_tamanho.valor) as total_pedido')
+            ->join('item_pedido', 'pedido.id', '=', 'item_pedido.idpedido')
+            ->join('item_valor_tamanho', 'item_valor_tamanho.id', '=', 'item_pedido.iditem');
+    }
+
+    public function scopeWithTotalTaxaEntrega($query){
+        return $query->selectRaw('sum(taxa_entrega) as total_taxa_entrega');
+    }
+
+    public function scopeGreaterThanDataPedido($query, $date){
+        return $query->whereDate('dataPedido', '>=', $date);
+    }
+
+    public function scopeLessThanDataPedido($query, $date){
+        return $query->whereDate('dataPedido', '<=', $date);
+    }
+
+    public function scopeBeetweenDataPedido($query, $interval){
+        return $query->whereBetween('dataPedido', [
+            $interval[0],
+            $interval[1]
+        ]);
+    }
+
+    public function scopeByCliente($query, $cliente){
+        return $query->where('idpessoa', $cliente);
+    }
 }
