@@ -34,8 +34,12 @@
                         <td>{{$cliente->email }}</td>
                         <td>
                             <a href="{{route('clientes.edit',['cliente' => $cliente])}}">Editar</a> |
-                            <a href="{{route('clientes.destroy',['cliente' => $cliente])}}" onclick="event.preventDefault();if(confirm('Deseja excluir?')){document.getElementById('form-delete-{{$cliente->id}}').submit()}">Excluir</a>
-                            <form id='form-delete-{{$cliente->id}}' style="display: none" method="post" action="{{route('clientes.destroy',['cliente' => $cliente])}}">
+                            <a href="{{route('clientes.destroy',['cliente' => $cliente])}}"
+                               onclick="event.preventDefault();if(confirm('Deseja excluir?')){document.getElementById('form-delete-{{$cliente->id}}').submit()}">Excluir</a>
+                            |
+                            <a href="{{route('pedidos.index',['cliente' => $cliente->id])}}" target="_blank">Pedidos</a>
+                            <form id='form-delete-{{$cliente->id}}' style="display: none" method="post"
+                                  action="{{route('clientes.destroy',['cliente' => $cliente])}}">
                                 {{csrf_field()}}
                                 {{method_field('DELETE')}}
                             </form>

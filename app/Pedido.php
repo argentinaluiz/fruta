@@ -8,11 +8,23 @@ class Pedido extends Model
 {
     protected $table = 'pedido';
 
-    protected $fillable = ['dataEntrega','dataPedido','dataPedido','idpessoa', 'idorigem'];
+    protected $fillable = [
+        'dataEntrega',
+        'dataPedido',
+        'dataPedido',
+        'idpessoa',
+        'idorigem',
+        'taxa_entrega',
+        'contabilizar_entrega'
+    ];
 
     protected $dates = ['dataPedido', 'dataEntrega'];
 
     public $timestamps = false;
+
+    protected $casts = [
+        'contabilizar_entrega' => 'boolean'
+    ];
 
     public function cliente(){
         return $this->belongsTo(Cliente::class,'idpessoa');

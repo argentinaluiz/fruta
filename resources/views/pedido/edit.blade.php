@@ -25,6 +25,23 @@
                             @endforeach
                         </select>
                     </div>
+                    <div class="row">
+                        <div class="col-xl-2">
+                            <div class="checkbox">
+                                <label>
+                                    <input name="contabilizar_entrega" type="checkbox"
+                                            {{$pedido->contabilizar_entrega === true ? 'checked="checked"': null}}> Contabilizar entrega
+                                </label>
+                            </div>
+                        </div>
+                        <div class="col-xl-10">
+                            <div class="form-group">
+                                <label for="taxa_entrega">Tx de entrega</label>
+                                <input class="form-control" type="number" step="any" name="taxa_entrega" id="taxa_entrega"
+                                       value="{{$pedido->taxa_entrega}}">
+                            </div>
+                        </div>
+                    </div>
                     <div class="form-group">
                         <label for="data_pedido">Data Pedido</label>
                         <input class="form-control" type="date" name="dataPedido" id="data_pedido"

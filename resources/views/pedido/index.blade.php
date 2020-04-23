@@ -5,32 +5,53 @@
         <div class="row">
             <h4>Listagem de pedidos</h4>
             <table class="table">
-                <thead>
                 <tr>
                     <td>
-                        <strong>Total:</strong> R$ {{$total ?? 0}}
+                        <strong>Quant.:</strong> {{$pedidos->total()}}
                     </td>
                     <td>
-                        <strong>Hoje:</strong> R$ {{$totalToday ?? 0}}
+                        <strong>Total:</strong> R$ {{$total + $totalTaxaEntrega}} ({{$totalTaxaEntrega}})
                     </td>
                     <td>
-                        <strong>Últimos 7 dias:</strong> R$ {{$totalSevenDays ?? 0 }}
+                        <strong>Hoje:</strong> R$ {{$totalToday}}
                     </td>
                     <td>
-                        <strong>Últimos 30 dias:</strong> R$ {{$totalThirtyDays ?? 0}}
+                        <strong>Últimos 7 dias:</strong> R$ {{$totalSevenDays}}
+                    </td>
+                    <td>
+                        <strong>Últimos 30 dias:</strong> R$ {{$totalThirtyDays}}
+                    </td>
+                </tr>
+            </table>
+            <table class="table">
+                <thead>
+                <tr>
+                    <td colspan="7">
+                        <a href="{{route('pedidos.create')}}" class="btn btn-primary">Novo pedido</a>
                     </td>
                 </tr>
                 <tr>
-                    <td>
-                        <a href="{{route('pedidos.create')}}" class="btn btn-primary" >Novo pedido</a>
-                    </td>
-                    <td colspan="4">
+                    <td colspan="7">
                         <form class="form-inline" method="get">
                             <div class="col-auto">
-                                <input type="date" name="data_inicio" class="form-control" value="{{\Request::get('data_inicio') ? (new \DateTime(\Request::get('data_inicio')))->format('Y-m-d'): ''}}">
+                                <label>Início</label>
+                                <input type="date" name="data_inicio" class="form-control"
+                                       value="{{\Request::get('data_inicio') ? (new \DateTime(\Request::get('data_inicio')))->format('Y-m-d'): ''}}">
                             </div>
                             <div class="col-auto">
-                                <input type="date" name="data_fim" class="form-control" value="{{\Request::get('data_fim') ? (new \DateTime(\Request::get('data_fim')))->format('Y-m-d'): ''}}">
+                                <label>Fim</label>
+                                <input type="date" name="data_fim" class="form-control"
+                                       value="{{\Request::get('data_fim') ? (new \DateTime(\Request::get('data_fim')))->format('Y-m-d'): ''}}">
+                            </div>
+
+                            <div class="col-auto">
+                                <label class="form-con">Cliente</label>
+                                <select class="form-control" name="cliente" id="cliente" value="{{\Request::get('cliente')}}">
+                                    <option value="">Todos os clientes</option>
+                                    @foreach($clientes as $cliente)
+                                        <option value="{{$cliente->id}}" {{$cliente->id==\Request::get('cliente')?'selected="selected"': ''}}>{{$cliente->nome}}</option>
+                                    @endforeach
+                                </select>
                             </div>
                             <button class="btn btn-primary" type="submit">Pesquisar</button>
                         </form>
@@ -62,7 +83,7 @@
                 @endforeach
                 </tbody>
             </table>
-            {!! $pedidos->links() !!}
+            {!! $pedidos->appends(request()->query())->links() !!}
         </div>
     </div>
 @endsection
