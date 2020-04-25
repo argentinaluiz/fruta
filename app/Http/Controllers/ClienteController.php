@@ -14,10 +14,15 @@ class ClienteController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function index()
+    public function index(Request $request)
     {
-        $clientes = Cliente::with('perfilModel')->paginate();
-        return view('cliente.index', ['clientes' => $clientes]);
+        $query = Cliente::with('perfilModel');
+        if($request->get('cliente')){
+            $query->where('id', $request->cliente);
+        }
+        $clientes = $query->paginate();
+        $allClientes = Cliente::orderBy('nome', 'asc')->get(['id', 'nome']);
+        return view('cliente.index', compact('clientes', 'allClientes'));
     }
 
     /**

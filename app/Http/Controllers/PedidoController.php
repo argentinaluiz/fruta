@@ -68,7 +68,7 @@ class PedidoController extends Controller
             (new \DateTime())->format('Y-m-d')
         ], $request);
 
-        $clientes = Cliente::all();
+        $clientes = Cliente::orderBy('nome', 'asc')->get(['id', 'nome']);
 
         return view('pedido.index', compact(
             'pedidos',
