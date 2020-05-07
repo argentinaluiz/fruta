@@ -9,7 +9,6 @@ class Pedido extends Model
     protected $table = 'pedido';
 
     protected $fillable = [
-        'dataEntrega',
         'dataPedido',
         'dataPedido',
         'idpessoa',
@@ -18,7 +17,7 @@ class Pedido extends Model
         'contabilizar_entrega'
     ];
 
-    protected $dates = ['dataPedido', 'dataEntrega'];
+    protected $dates = ['dataPedido'];
 
     public $timestamps = false;
 
@@ -49,15 +48,14 @@ class Pedido extends Model
     public function getTotalAttribute(){
         $sum = 0;
         foreach ($this->items as $item){
-            $sum += $item->item->valor * $item->quantidade;
+            $sum += $item->valor * $item->quantidade;
         }
         return number_format($sum, 2);
     }
 
     public function scopeWithTotal($query){
-        return $query->selectRaw('sum(item_pedido.quantidade*item_valor_tamanho.valor) as total_pedido')
-            ->join('item_pedido', 'pedido.id', '=', 'item_pedido.idpedido')
-            ->join('item_valor_tamanho', 'item_valor_tamanho.id', '=', 'item_pedido.iditem');
+        return $query->selectRaw('sum(item_pedido.quantidade*item_pedido.valor) as total_pedido')
+            ->join('item_pedido', 'pedido.id', '=', 'item_pedido.idpedido');
     }
 
     public function scopeWithTotalTaxaEntrega($query){

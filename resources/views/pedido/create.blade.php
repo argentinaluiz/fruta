@@ -44,16 +44,13 @@
                         <input class="form-control" type="date" name="dataPedido" id="data_pedido">
                     </div>
                     <div class="form-group">
-                        <label for="data_entrega">Data Entrega</label>
-                        <input class="form-control" type="date" name="dataEntrega" id="data_entrega">
-                    </div>
-                    <div class="form-group">
                         <button type="button" class="btn btn-primary" @click="adicionarItem()">Nova linha</button>
                         <table class="table">
                             <thead>
                             <tr>
                                 <th></th>
                                 <th style="width: 60%">Item</th>
+                                <th>Valor</th>
                                 <th>Quant</th>
                             </tr>
                             </thead>
@@ -65,6 +62,9 @@
                                 <td>
                                     <v-select v-model="items[key].selected" :options='{!! json_encode($items) !!}'></v-select>
                                     <input type="hidden" :name="'items['+key+'][item]'">
+                                </td>
+                                <td v-cloak>
+                                    {!! '[[ valor(items[key]) ]]' !!}
                                 </td>
                                 <td>
                                     <input class="form-control" type="number" :name="'items['+key+'][quantidade]'" step="1" min="1"/>
@@ -86,12 +86,11 @@
 
 @push('javascript')
     <script src="https://cdnjs.cloudflare.com/ajax/libs/vue/2.5.17/vue.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/vue-select/2.4.0/vue-select.js"></script>
     <script>
-        Vue.config.delimiters = ['[[', ']]'];
         Vue.component('v-select', VueSelect.VueSelect);
         var app = new Vue({
+            delimiters: ['[[', ']]'],
             el: '#container-pedido',
             data: {
                 items: [{selected: null}],
@@ -109,6 +108,9 @@
                         $('[name="items['+key+'][item]"]').val(this.items[key].selected.value.id);
                     }
                     $('#my-form')[0].submit();
+                },
+                valor(item){
+                    return !item.selected?'': 'R$ '+item.selected.value.valor
                 }
             }
         });

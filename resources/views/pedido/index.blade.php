@@ -64,7 +64,6 @@
                     <th>#</th>
                     <th>Total</th>
                     <th>Criado em</th>
-                    <th>Entrega</th>
                     <th>Cliente</th>
                     <th>Origem</th>
                     <th>Ações</th>
@@ -76,7 +75,6 @@
                         <td>{{ $pedido->id }}</td>
                         <td>R$ {{ $pedido->total }}</td>
                         <td>{{$pedido->dataPedido ? $pedido->dataPedido->format('d/m/Y'): ''}}</td>
-                        <td>{{$pedido->dataEntrega ? $pedido->dataEntrega->format('d/m/Y'): ''}}</td>
                         <td>{{$pedido->cliente->nome}}</td>
                         <td>{{$pedido->perfil ? $pedido->perfil->nome: ''}}</td>
                         <td>

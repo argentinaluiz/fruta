@@ -145,7 +145,6 @@ class PedidoController extends Controller
     {
         $this->validate($request, [
             'dataPedido' => 'nullable|date',
-            'dataEntrega' => 'nullable|date',
             'cliente' => 'required|exists:pessoa,id',
             'perfil' => 'required|exists:perfil,id',
             'taxa_entrega' => 'required|numeric',
@@ -157,7 +156,6 @@ class PedidoController extends Controller
         /** @var Pedido $pedido */
         $pedido = Pedido::create([
             'dataPedido' => $request->dataPedido,
-            'dataEntrega' => $request->dataEntrega,
             'idpessoa' => $request->cliente,
             'idorigem' => $request->perfil,
             'taxa_entrega' => $request->taxa_entrega,
@@ -166,7 +164,8 @@ class PedidoController extends Controller
         foreach ($request->items as $item) {
             $pedido->items()->create([
                 'iditem' => $item['item'],
-                'quantidade' => $item['quantidade']
+                'quantidade' => $item['quantidade'],
+                'valor' => ItemValor::find($item['item'])->valor
             ]);
         }
         return redirect(route('pedidos.index'));
@@ -203,7 +202,8 @@ class PedidoController extends Controller
                     'label' => "{$item->item->item->item} - {$item->item->volume} - R$ {$item->item->valor}",
                     'value' => $item->item
                 ],
-                'quantidade' => $item->quantidade
+                'quantidade' => $item->quantidade,
+                'valor' => $item->valor,
             ];
         }
 
@@ -227,7 +227,6 @@ class PedidoController extends Controller
     {
         $this->validate($request, [
             'dataPedido' => 'nullable|date',
-            'dataEntrega' => 'nullable|date',
             'cliente' => 'required|exists:pessoa,id',
             'perfil' => 'required|exists:perfil,id',
             'taxa_entrega' => 'required|numeric',
@@ -239,7 +238,6 @@ class PedidoController extends Controller
         /** @var Pedido $pedido */
         $pedido->fill([
             'dataPedido' => $request->dataPedido,
-            'dataEntrega' => $request->dataEntrega,
             'idpessoa' => $request->cliente,
             'idorigem' => $request->perfil,
             'taxa_entrega' => $request->taxa_entrega,
@@ -250,7 +248,8 @@ class PedidoController extends Controller
         foreach ($request->items as $item) {
             $pedido->items()->create([
                 'iditem' => $item['item'],
-                'quantidade' => $item['quantidade']
+                'quantidade' => $item['quantidade'],
+                'valor' => ItemValor::find($item['item'])->valor
             ]);
         }
         return redirect(route('pedidos.index'));

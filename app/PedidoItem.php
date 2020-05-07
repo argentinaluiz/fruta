@@ -8,7 +8,7 @@ class PedidoItem extends Model
 {
     protected $table = 'item_pedido';
 
-    protected $fillable = ['iditem','quantidade'];
+    protected $fillable = ['iditem','quantidade', 'valor'];
 
     public $timestamps = false;
 

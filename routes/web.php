@@ -12,14 +12,16 @@
 */
 
 Route::get('/', function () {
-    return view('welcome');
+    return redirect()->route('pedidos.index');
 });
 
 Auth::routes();
 
 Route::get('/home', 'HomeController@index')->name('home');
 
-
-Route::resource('pedidos','PedidoController');
-Route::resource('clientes','ClienteController');
-Route::get('get-cidades/{idEstado}', 'CidadeController@getCidades');
+Route::group(['middleware' => 'auth'], function(){
+    Route::resource('pedidos','PedidoController');
+    Route::resource('clientes','ClienteController');
+    Route::resource('items','ItemController');
+    Route::get('get-cidades/{idEstado}', 'CidadeController@getCidades');
+});

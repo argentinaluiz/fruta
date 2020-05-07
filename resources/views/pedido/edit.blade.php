@@ -48,17 +48,13 @@
                                value="{{$pedido->dataPedido ? $pedido->dataPedido->format('Y-m-d'):''}}">
                     </div>
                     <div class="form-group">
-                        <label for="data_entrega">Data Entrega</label>
-                        <input class="form-control" type="date" name="dataEntrega" id="data_entrega"
-                               value="{{$pedido->dataEntrega ? $pedido->dataEntrega->format('Y-m-d'): ''}}">
-                    </div>
-                    <div class="form-group">
                         <button type="button" class="btn btn-primary" @click="adicionarItem()">Nova linha</button>
                         <table class="table">
                             <thead>
                             <tr>
                                 <th></th>
                                 <th>Item</th>
+                                <th>Valor</th>
                                 <th>Quant</th>
                             </tr>
                             </thead>
@@ -68,12 +64,26 @@
                                     <button type="button" @click="removerLinha(key)">Remover</button>
                                 </td>
                                 <td>
-                                    <v-select v-model="items[key].selected" :options='{!! json_encode($items) !!}'></v-select>
+                                    <v-select
+                                            :disabled="items[key].valor!==null && items[key].valor!==undefined"
+                                            v-model="items[key].selected"
+                                            :options='{!! json_encode($items) !!}'
+                                    ></v-select>
                                     <input type="hidden" :name="'items['+key+'][item]'">
                                 </td>
+                                <td v-cloak>
+                                    {!! '[[ valor(items[key]) ]]' !!}
+                                </td>
                                 <td>
-                                    <input class="form-control" type="number" :name="'items['+key+'][quantidade]'"
-                                           step="1" min="1" :value="item.quantidade"/>
+                                    <input
+                                            :disabled="items[key].valor!==null && items[key].valor!==undefined"
+                                            class="form-control"
+                                            type="number"
+                                            :name="'items['+key+'][quantidade]'"
+                                            step="1"
+                                            min="1"
+                                            :value="item.quantidade"
+                                    />
                                 </td>
                             </tr>
                             </tbody>
@@ -88,12 +98,11 @@
 
 @push('javascript')
     <script src="https://cdnjs.cloudflare.com/ajax/libs/vue/2.5.17/vue.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/vue-select/2.4.0/vue-select.js"></script>
     <script>
         Vue.component('v-select', VueSelect.VueSelect);
-        Vue.config.delimiters = ['[[', ']]'];
         var app = new Vue({
+            delimiters: ['[[', ']]'],
             el: '#container-pedido',
             data: {
                 items: {!! json_encode($itemsDoPedido) !!}
@@ -110,6 +119,14 @@
                         $('[name="items['+key+'][item]"]').val(this.items[key].selected.value.id);
                     }
                     $('#my-form')[0].submit();
+                },
+                valor(item){
+                    console.log(item)
+                    if(item.valor){
+                        return 'R$ '+item.valor;
+                    }
+
+                    return !item.selected?'': 'R$ '+item.selected.value.valor
                 }
             }
         })
