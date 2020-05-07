@@ -18,7 +18,7 @@
                                 <label class="form-con">Item</label>
                                 <select class="form-control" name="item" id="item" value="{{\Request::get('item')}}">
                                     <option value="">Todos os items</option>
-                                    @foreach($items as $item)
+                                    @foreach($allItems as $item)
                                         <option value="{{$item->id}}" {{$item->id==\Request::get('item')?'selected="selected"': ''}}>{{$item->item}}</option>
                                     @endforeach
                                 </select>
