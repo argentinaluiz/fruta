@@ -3,11 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Categoria;
-use App\Cliente;
 use App\Item;
-use App\ItemValor;
-use App\Pedido;
-use App\Perfil;
 use Illuminate\Http\Request;
 
 class ItemController extends Controller
@@ -15,7 +11,7 @@ class ItemController extends Controller
     public function index(Request $request)
     {
         $query = Item::query();
-        if($request->get('item')){
+        if ($request->get('item')) {
             $query->where('id', $request->item);
         }
         $items = $query->paginate();
