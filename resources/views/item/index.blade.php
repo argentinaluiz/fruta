@@ -53,6 +53,15 @@
                         <td>{{$item->ingredientes}}</td>
                         <td>
                             <a href="{{route('items.edit',['item' => $item])}}">Editar</a> |
+                            <a href="{{route('items.destroy',['item' => $item])}}"
+                               onclick="event.preventDefault();if(confirm('Deseja excluir?')){document.getElementById('form-delete-{{$item->id}}').submit()}">
+                                Excluir
+                            </a>
+                            <form id='form-delete-{{$item->id}}' style="display: none" method="post"
+                                  action="{{route('items.destroy',['item' => $item])}}">
+                                {{csrf_field()}}
+                                {{method_field('DELETE')}}
+                            </form>
                         </td>
                     </tr>
                 @endforeach

@@ -13,4 +13,8 @@ class ItemValor extends Model
     public function item(){
         return $this->belongsTo(Item::class,'id_item');
     }
+
+    public function pedidoItems(){
+        return $this->hasMany(PedidoItem::class,'iditem');
+    }
 }

@@ -98,8 +98,17 @@ class ItemController extends Controller
         return redirect(route('items.index'));
     }
 
-    public function destroy($id)
+    public function destroy(Item $item)
     {
-        //
+        $existsRelations = $item->itemValores()->whereHas('pedidoItems')->exists();
+        if($existsRelations) {
+            session()->flash('error', 'Item já está relacionado com pedidos, não é possível excluir');
+            return redirect(route('items.index'));
+        }
+
+        $item->itemValores()->delete();
+        $item->delete();
+
+        return redirect(route('items.index'));
     }
 }

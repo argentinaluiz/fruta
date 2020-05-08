@@ -13,10 +13,6 @@
                         <textarea name="nome" class="form-control" id="nome" cols="30" rows="2" required>{{$cliente->nome}}</textarea>
                     </div>
                     <div class="form-group">
-                        <label for="email" class="form-l">E-mail</label>
-                        <input type="email" class="form-control" name="email" id="email" required value="{{$cliente->email}}"/>
-                    </div>
-                    <div class="form-group">
                         <label for="perfil" class="form-l">Perfil</label>
                         <select class="form-control" class="form-control" name="perfil" id="perfil" required value="{{$cliente->perfil}}">
                             <option value="">Selecione o perfil</option>
@@ -26,12 +22,16 @@
                         </select>
                     </div>
                     <div class="form-group">
+                        <label for="email" class="form-l">E-mail</label>
+                        <input type="email" class="form-control" name="email" id="email" value="{{$cliente->email}}"/>
+                    </div>
+                    <div class="form-group">
                         <label for="endereco" class="form-l">Endereço</label>
                         <textarea name="endereco" class="form-control" id="endereco" cols="30" rows="2">{{$cliente->endereco}}</textarea>
                     </div>
                     <div class="form-group">
                         <label for="bairro" class="form-l">Bairro</label>
-                        <textarea name="bairro" class="form-control" id="bairro" cols="30" rows="2" required>{{$cliente->bairro}}</textarea>
+                        <textarea name="bairro" class="form-control" id="bairro" cols="30" rows="2">{{$cliente->bairro}}</textarea>
                     </div>
                     <div class="form-group">
                         <label for="estado" class="form-l">Estado</label>

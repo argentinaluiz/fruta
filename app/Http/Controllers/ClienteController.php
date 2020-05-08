@@ -6,6 +6,7 @@ use App\Cliente;
 use App\Estado;
 use App\Perfil;
 use Illuminate\Http\Request;
+use Illuminate\Validation\ValidationException;
 
 class ClienteController extends Controller
 {
@@ -17,7 +18,7 @@ class ClienteController extends Controller
     public function index(Request $request)
     {
         $query = Cliente::with('perfilModel');
-        if($request->get('cliente')){
+        if ($request->get('cliente')) {
             $query->where('id', $request->cliente);
         }
         $clientes = $query->paginate();
@@ -36,24 +37,26 @@ class ClienteController extends Controller
         $estadoDefault = Estado::where('sigla', 'GO')->first();
         $perfis = Perfil::all();
         return view('cliente.create', [
-            'estados' => $estados, 'perfis' => $perfis, 'estadoDefault' => $estadoDefault
+            'estados' => $estados,
+            'perfis' => $perfis,
+            'estadoDefault' => $estadoDefault
         ]);
     }
 
     /**
      * Store a newly created resource in storage.
      *
-     * @param  \Illuminate\Http\Request $request
+     * @param \Illuminate\Http\Request $request
      * @return \Illuminate\Http\Response
      */
     public function store(Request $request)
     {
         $this->validate($request, [
             'nome' => 'required',
-            'email' => 'email|unique:pessoa,email',
             'perfil' => 'required|exists:perfil,id',
+            'email' => 'nullable|email|unique:pessoa,email',
             'endereco' => 'nullable',
-            'bairro' => 'required',
+            'bairro' => 'nullable',
             'id_cidade' => 'required|exists:cidade,id',
             'cep' => 'nullable',
             'telefone' => 'nullable',
@@ -66,7 +69,7 @@ class ClienteController extends Controller
     /**
      * Display the specified resource.
      *
-     * @param  int $id
+     * @param int $id
      * @return \Illuminate\Http\Response
      */
     public function show($id)
@@ -77,7 +80,7 @@ class ClienteController extends Controller
     /**
      * Show the form for editing the specified resource.
      *
-     * @param  int $id
+     * @param int $id
      * @return \Illuminate\Http\Response
      */
     public function edit(Cliente $cliente)
@@ -94,18 +97,18 @@ class ClienteController extends Controller
     /**
      * Update the specified resource in storage.
      *
-     * @param  \Illuminate\Http\Request $request
-     * @param  int $id
+     * @param \Illuminate\Http\Request $request
+     * @param int $id
      * @return \Illuminate\Http\Response
      */
     public function update(Request $request, Cliente $cliente)
     {
         $this->validate($request, [
             'nome' => 'required',
-            'email' => 'email|unique:pessoa,email,' . $cliente->id,
             'perfil' => 'required|exists:perfil,id',
+            'email' => 'nullable|email|unique:pessoa,email,' . $cliente->id,
             'endereco' => 'nullable',
-            'bairro' => 'required',
+            'bairro' => 'nullable',
             'id_cidade' => 'required|exists:cidade,id',
             'cep' => 'nullable',
             'telefone' => 'nullable',
@@ -120,13 +123,13 @@ class ClienteController extends Controller
     /**
      * Remove the specified resource from storage.
      *
-     * @param  int $id
+     * @param int $id
      * @return \Illuminate\Http\Response
      */
     public function destroy(Cliente $cliente)
     {
         if ($cliente->pedidos()->count()) {
-            abort(403,'Cliente relacionado com pedidos, não é possível excluir');
+            abort(403, 'Cliente relacionado com pedidos, não é possível excluir');
         }
         $cliente->delete();
         return redirect(route('clientes.index'));

@@ -12,10 +12,6 @@
                         <textarea name="nome" class="form-control" id="nome" cols="30" rows="2" required></textarea>
                     </div>
                     <div class="form-group">
-                        <label for="email" class="form-l">E-mail</label>
-                        <input type="email" class="form-control" name="email" id="email" required/>
-                    </div>
-                    <div class="form-group">
                         <label for="perfil" class="form-l">Perfil</label>
                         <select class="form-control" class="form-control" name="perfil" id="perfil" required>
                             <option value="">Selecione o perfil</option>
@@ -25,16 +21,20 @@
                         </select>
                     </div>
                     <div class="form-group">
+                        <label for="email" class="form-l">E-mail</label>
+                        <input type="email" class="form-control" name="email" id="email"/>
+                    </div>
+                    <div class="form-group">
                         <label for="endereco" class="form-l">Endereço</label>
                         <textarea name="endereco" class="form-control" id="endereco" cols="30" rows="2"></textarea>
                     </div>
                     <div class="form-group">
                         <label for="bairro" class="form-l">Bairro</label>
-                        <textarea name="bairro" class="form-control" id="bairro" cols="30" rows="2" required></textarea>
+                        <textarea name="bairro" class="form-control" id="bairro" cols="30" rows="2"></textarea>
                     </div>
                     <div class="form-group">
                         <label for="estado" class="form-l">Estado</label>
-                        <select class="form-control" class="form-control" name="id_estado" id="estado" required>
+                        <select class="form-control" class="form-control" name="id_estado" id="estado">
                             <option value="">Selecione o estado</option>
                             @foreach($estados as $estado)
                                 <option value="{{$estado->id}}" {{$estado->sigla === $estadoDefault->sigla ? 'selected': ''}}>{{$estado->sigla}}</option>
@@ -43,7 +43,7 @@
                     </div>
                     <div class="form-group">
                         <label for="cidade" class="form-l">Cidade</label>
-                        <select class="form-control" class="form-control" name="id_cidade" id="cidade" required>
+                        <select class="form-control" class="form-control" name="id_cidade" id="cidade">
                                 @foreach($estadoDefault->cidades as $cidade)
                                     <option value="{{$cidade->id}}" {{strtolower($cidade->nome) == 'goiânia'? 'selected="selected"':''}}>{{$cidade->nome}}</option>
                                 @endforeach

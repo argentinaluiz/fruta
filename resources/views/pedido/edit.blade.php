@@ -76,7 +76,7 @@
                                 </td>
                                 <td>
                                     <input
-                                            :disabled="items[key].valor!==null && items[key].valor!==undefined"
+                                            :readonly="items[key].valor!==null && items[key].valor!==undefined"
                                             class="form-control"
                                             type="number"
                                             :name="'items['+key+'][quantidade]'"
