@@ -16,7 +16,8 @@
                         <form class="form-inline" method="get">
                             <div class="col-auto">
                                 <label class="form-con">Cliente</label>
-                                <select class="form-control" name="cliente" id="cliente" value="{{\Request::get('cliente')}}">
+                                <select class="form-control" name="cliente" id="cliente"
+                                        value="{{\Request::get('cliente')}}">
                                     <option value="">Todos os clientes</option>
                                     @foreach($allClientes as $cliente)
                                         <option value="{{$cliente->id}}" {{$cliente->id==\Request::get('cliente')?'selected="selected"': ''}}>{{$cliente->nome}}</option>
@@ -53,7 +54,7 @@
                             <a href="{{route('clientes.destroy',['cliente' => $cliente])}}"
                                onclick="event.preventDefault();if(confirm('Deseja excluir?')){document.getElementById('form-delete-{{$cliente->id}}').submit()}">Excluir</a>
                             |
-                            <a href="{{route('pedidos.index',['cliente' => $cliente->id])}}" target="_blank">Pedidos</a>
+                            <a href="{{route('pedidos.index',['cliente' => $cliente->id])}}">Pedidos</a>
                             <form id='form-delete-{{$cliente->id}}' style="display: none" method="post"
                                   action="{{route('clientes.destroy',['cliente' => $cliente])}}">
                                 {{csrf_field()}}

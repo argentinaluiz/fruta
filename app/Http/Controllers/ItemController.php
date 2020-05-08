@@ -14,9 +14,13 @@ class ItemController extends Controller
         if ($request->get('item')) {
             $query->where('id', $request->item);
         }
+        if ($request->get('categoria')) {
+            $query->where('idcategoria', $request->categoria);
+        }
         $items = $query->paginate();
         $allItems = Item::orderBy('item', 'asc')->get(['id', 'item']);
-        return view('item.index', compact('items', 'allItems'));
+        $categorias = Categoria::orderBy('nome', 'asc')->get(['id', 'nome']);
+        return view('item.index', compact('items', 'allItems', 'categorias'));
     }
 
 

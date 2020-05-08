@@ -23,6 +23,15 @@
                                     @endforeach
                                 </select>
                             </div>
+                            <div class="col-auto">
+                                <label class="form-con">Categoria</label>
+                                <select class="form-control" name="categoria" id="categoria" value="{{\Request::get('categoria')}}">
+                                    <option value="">Todos as categorias</option>
+                                    @foreach($categorias as $categoria)
+                                        <option value="{{$categoria->id}}" {{$categoria->id==\Request::get('categoria')?'selected="selected"': ''}}>{{$categoria->nome}}</option>
+                                    @endforeach
+                                </select>
+                            </div>
                             <button class="btn btn-primary" type="submit">Pesquisar</button>
                         </form>
                     </td>

@@ -50,7 +50,7 @@ class ClienteController extends Controller
     {
         $this->validate($request, [
             'nome' => 'required',
-            'email' => 'required|email|unique:pessoa,email',
+            'email' => 'email|unique:pessoa,email',
             'perfil' => 'required|exists:perfil,id',
             'endereco' => 'nullable',
             'bairro' => 'required',
@@ -102,7 +102,7 @@ class ClienteController extends Controller
     {
         $this->validate($request, [
             'nome' => 'required',
-            'email' => 'required|email|unique:pessoa,email,' . $cliente->id,
+            'email' => 'email|unique:pessoa,email,' . $cliente->id,
             'perfil' => 'required|exists:perfil,id',
             'endereco' => 'nullable',
             'bairro' => 'required',
